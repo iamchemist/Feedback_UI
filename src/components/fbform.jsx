@@ -3,14 +3,28 @@ import Card from '../shared/card'
 import { useState } from 'react'
 import Button from '../Data/Button'
 import Ratingselect from '../shared/ratingselect'
+import {useContext,useEffect} from 'react'
+import Fbcontext from '../context/fbcontext'
 
-function Fbform({fbfprop}) {
+function Fbform() {
 
     const [pext,setText]=useState('')
     const [message,Setmessage] = useState('Minimum 10 characters')
     const [btnDisabled,setbtnDisabled] = useState(true)
     const [rating,setRating] =useState(10)
 
+    
+    const {addfeedback,fbedit,updateFeedback} = useContext(Fbcontext)
+    
+    //useEffect runs each time fbedit changes
+    useEffect(()=>{
+        if(fbedit.edit===true){
+            setbtnDisabled(false)
+            setText(fbedit.item.text)
+            setRating(fbedit.item.rating)
+        }
+
+    },[fbedit])
 
     const handletext = (e)=>{
         if(pext===''){
@@ -36,7 +50,15 @@ function Fbform({fbfprop}) {
             text:pext,
             rating
             }
-            fbfprop(newfeedback)
+
+            if(fbedit.edit===true){
+                updateFeedback(fbedit.item.id,newfeedback)
+            }
+            else{
+                addfeedback(newfeedback)
+            }
+
+            
             setText('')
         }
 

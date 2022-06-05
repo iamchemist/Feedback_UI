@@ -1,15 +1,21 @@
 import React from 'react'
-import {useState} from 'react'
-
+import {useState,useContext,useEffect} from 'react'
+import Fbcontext from '../context/fbcontext'
 
 function Ratingselect({select}) {
 
     const [selected,setselected]=useState(10)
 
+    const {fbedit} = useContext(Fbcontext)
+
     const handleChange=(e)=>{
         setselected(+e.currentTarget.value)
         select(+e.currentTarget.value)
     }
+
+    useEffect(()=>{
+         setselected(fbedit.item.rating)
+    },[fbedit])
 
   return (
     <ul className='rating'>
